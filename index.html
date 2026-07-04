@@ -14,7 +14,7 @@
   --hilton:#3E5FA8; --amex:#AEB4BC; --bonvoy:#C8785A;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{background:var(--pine);color:var(--ivory);font-family:'Noto Sans KR',sans-serif;font-size:15px;line-height:1.55;padding-bottom:70px}
+body{background:var(--pine);color:var(--ivory);font-family:'Noto Sans KR',sans-serif;font-size:15px;line-height:1.55;padding-bottom:86px}
 header{padding:26px 18px 12px;border-bottom:1px solid var(--line);position:sticky;top:0;background:linear-gradient(var(--pine) 82%,rgba(20,31,27,.94));z-index:10;backdrop-filter:blur(6px)}
 h1{font-family:'Noto Serif KR',serif;font-weight:700;font-size:24px;letter-spacing:-.5px}
 h1 em{font-style:normal;color:var(--gold)}
@@ -27,7 +27,7 @@ h1 em{font-style:normal;color:var(--gold)}
 .chip{flex:none;border:1px solid var(--line);border-radius:999px;padding:5px 13px;font-size:12.5px;color:var(--sand);background:transparent;font-family:inherit;cursor:pointer}
 .chip.on{background:var(--gold);color:var(--pine);border-color:var(--gold);font-weight:700}
 main{padding:6px 14px}
-.legend{display:flex;gap:14px;padding:12px 4px;color:var(--sand);font-size:11.5px}
+.legend{display:flex;gap:14px;padding:12px 4px;color:var(--sand);font-size:11.5px;flex-wrap:wrap}
 .legend span{display:flex;align-items:center;gap:5px}
 .dot{width:8px;height:8px;border-radius:50%}
 .d-h{background:var(--hilton)}.d-a{background:var(--amex)}.d-b{background:var(--bonvoy)}
@@ -35,7 +35,7 @@ main{padding:6px 14px}
 .hotel-head{display:flex;align-items:center;gap:10px;padding:13px 15px;cursor:pointer}
 .hotel-name{font-weight:700;font-size:15.5px;flex:1}
 .hotel-name small{display:block;font-weight:400;color:var(--sand);font-size:11.5px;margin-top:1px}
-.dots{display:flex;gap:5px}
+.dots{display:flex;gap:5px;align-items:center}
 .arrow{color:var(--sand);font-size:11px;transition:transform .2s}
 .hotel.open .arrow{transform:rotate(90deg)}
 .hotel-body{display:none;padding:0 15px 14px;border-top:1px dashed var(--line)}
@@ -56,116 +56,262 @@ main{padding:6px 14px}
 .summary li::before{content:"·";position:absolute;left:2px;color:var(--gold)}
 .summary li b{color:var(--ivory)}
 .empty{text-align:center;color:var(--sand);padding:40px 0;font-size:14px}
-footer{position:fixed;bottom:0;left:0;right:0;background:rgba(20,31,27,.96);border-top:1px solid var(--line);padding:9px 16px calc(9px + env(safe-area-inset-bottom));font-size:11px;color:var(--sand);text-align:center;backdrop-filter:blur(6px)}
-footer b{color:var(--gold)}
+/* 발렛 뱃지 */
+.pbadge{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:6px;padding:1px 6px 1px 5px;background:rgba(201,169,106,.08)}
+.pbadge .p{font-size:10px;font-weight:700;color:var(--gold);font-family:'Noto Serif KR',serif}
+.pbadge .dot{width:6px;height:6px}
+/* 레스토랑 뷰 */
+.warnbox{border:1px solid rgba(224,128,88,.4);border-radius:12px;background:rgba(200,120,90,.08);padding:12px 14px;margin:12px 0;font-size:12px;color:var(--sand)}
+.warnbox b{color:#E0A088}
+.rmeta{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+.rtag{font-size:10.5px;border:1px solid var(--line);border-radius:5px;padding:1px 7px;color:var(--sand)}
+.rtag.hl{color:var(--gold);border-color:var(--gold)}
+.rtag.bv{color:#E0A088;border-color:rgba(224,128,88,.5)}
+/* 발렛맵 뷰 */
+.vregion{font-family:'Noto Serif KR',serif;font-size:15px;font-weight:700;color:var(--gold);margin:20px 4px 8px}
+.vrow{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:11px;background:var(--pine2);padding:10px 13px;margin-bottom:7px}
+.vname{flex:1;font-size:13.5px;font-weight:500}
+.vname small{display:block;color:var(--sand);font-size:11px;font-weight:400}
+.vdots{display:flex;gap:5px}
+.vdots .dot{width:9px;height:9px}
+/* 하단 탭 */
+.tabbar{position:fixed;bottom:0;left:0;right:0;display:flex;background:rgba(20,31,27,.97);border-top:1px solid var(--line);backdrop-filter:blur(8px);padding:6px 8px calc(6px + env(safe-area-inset-bottom))}
+.tab{flex:1;background:none;border:none;color:var(--sand);font-family:inherit;font-size:12px;padding:8px 0 6px;cursor:pointer;border-radius:10px}
+.tab .ico{display:block;font-size:17px;margin-bottom:2px}
+.tab.on{color:var(--gold);font-weight:700}
+.disclaim{text-align:center;font-size:10.5px;color:var(--sand);padding:18px 16px 8px}
+.disclaim b{color:var(--gold)}
 </style>
 </head>
 <body>
 <header>
   <h1>어디서 <em>긁지</em></h1>
   <div class="sub">호텔 × 카드 혜택 컨시어지 · 2026.07 기준</div>
-  <div class="search"><input id="q" type="search" placeholder="호텔·브랜드 검색 (예: 콘래드, JW, 조식)"></div>
-  <div class="chips" id="chips">
-    <button class="chip on" data-f="all">전체</button>
-    <button class="chip" data-f="incheon">인천·송도</button>
-    <button class="chip" data-f="seoul">서울</button>
-    <button class="chip" data-f="korea">지방</button>
-    <button class="chip" data-f="global">해외</button>
-    <button class="chip" data-f="dining">다이닝</button>
-  </div>
+  <div class="search" id="searchWrap"><input id="q" type="search" placeholder="호텔·매장 검색 (예: 콘래드, 온달, 조식)"></div>
+  <div class="chips" id="chips"></div>
 </header>
 <main>
-  <div class="legend">
-    <span><i class="dot d-h"></i>힐튼 아멕스 (롯데)</span>
-    <span><i class="dot d-a"></i>아멕스 플래티넘 (현대)</span>
-    <span><i class="dot d-b"></i>본보이 The BEST (신한)</span>
-  </div>
-  <div id="list"></div>
-  <div class="empty" id="empty" style="display:none">검색 결과 없음</div>
+  <!-- ===== 호텔 뷰 ===== -->
+  <div id="view-hotel">
+    <div class="legend">
+      <span><i class="dot d-h"></i>힐튼 아멕스 (롯데)</span>
+      <span><i class="dot d-a"></i>아멕스 플래티넘 (현대)</span>
+      <span><i class="dot d-b"></i>본보이 The BEST (신한)</span>
+      <span><span class="pbadge"><span class="p">P</span></span> 발렛 무료</span>
+    </div>
+    <div id="list"></div>
+    <div class="empty" id="empty" style="display:none">검색 결과 없음</div>
 
-  <div class="section-title">카드별 연간 체크리스트</div>
-  <div class="summary">
-    <h3><i class="dot d-h"></i>힐튼 아너스 아멕스 프리미엄 (롯데)</h3>
-    <ul>
-      <li><b>힐튼 골드 등급</b> 자동 — 조식·업글 우대</li>
-      <li><b>주말 무료숙박권 2매</b>/년 (환산가 50만/매) — 1차년도 1,200만 / 이후 연 2,400만 실적</li>
-      <li>연 2,400만 실적 시 <b>다이아몬드</b> 승급 (라운지·조식 상위 혜택)</li>
-      <li>국내 힐튼 호텔 <b>발렛파킹 연 12회</b> 무료 + <b>F&B 업장 할인 연 4회</b></li>
-      <li>1,500원당 최대 8 힐튼 포인트 (해외·힐튼 결제 시 최대)</li>
-      <li>공항 라운지 연 4회 (전월 50만)</li>
-    </ul>
+    <div class="section-title">카드별 연간 체크리스트</div>
+    <div class="summary">
+      <h3><i class="dot d-h"></i>힐튼 아너스 아멕스 프리미엄 (롯데)</h3>
+      <ul>
+        <li><b>힐튼 골드 등급</b> 자동 — 조식·업글 우대</li>
+        <li><b>주말 무료숙박권 2매</b>/년 (환산가 50만/매) — 1차년도 1,200만 / 이후 연 2,400만 실적</li>
+        <li>연 2,400만 실적 시 <b>다이아몬드</b> 승급 (라운지·조식 상위 혜택)</li>
+        <li>국내 힐튼 호텔 <b>발렛파킹 연 12회</b> 무료 + <b>F&B 업장 할인 연 4회</b></li>
+        <li>1,500원당 최대 8 힐튼 포인트 (해외·힐튼 결제 시 최대)</li>
+        <li>공항 라운지 연 4회 (전월 50만)</li>
+      </ul>
+    </div>
+    <div class="summary">
+      <h3><i class="dot d-a"></i>현대 아멕스 The Platinum Edition2</h3>
+      <ul>
+        <li><b>연간 바우처 85만원</b> — 1년차 400만 / 2년차부터 3,600만 실적. 호텔·백화점·올리브영·무신사·네이버플러스·코스트코 전환</li>
+        <li>MR: 기본 1MR/1,000원 (전월 50만) · <b>5X</b> 특별적립 — 해외·호텔·항공·여행사·면세·골프 (영역별 한도 1.5만MR)</li>
+        <li><b>FHR</b> 전세계 특급호텔 — 업글·2인 조식·$100 크레딧·레이트 체크아웃. PLCC라 온라인 예약 불가, <b>컨시어지 전화 예약만</b></li>
+        <li><b>THC</b> 2박 이상 — $100 크레딧 + 업글</li>
+        <li>힐튼 골드 + <b>본보이 골드</b> + 래디슨 프리미엄 매칭 (MR사이트 신청)</li>
+        <li><b>센추리온 라운지</b> 본인 무제한 + 공항 리무진·호텔/공항 발레파킹</li>
+        <li>아멕스 다이닝 Be My Guest: 레스토랑 6만↑ <b>3만 할인</b> / 베이커리 4만↑ 2만 할인 — <b>전월 50만 필수 · 월 1회 / 연 3회 (연 최대 9만)</b>, 6~8만대 결제에 아껴 쓸 것 <span class="tag">연3회=아멕스 공홈 기준</span></li>
+        <li>호텔 발렛 국내 41곳 (전월 50만) + 공항 발렛 인천/김포/청주</li>
+      </ul>
+    </div>
+    <div class="summary">
+      <h3><i class="dot d-b"></i>메리어트 본보이 The BEST (신한 Visa)</h3>
+      <ul>
+        <li><b>골드 엘리트</b> 자동 — 업글 우대·14시 레이트 체크아웃·포인트 +25%</li>
+        <li><b>무료숙박권 35K</b> 연 1매 (연회비 주기 실적 100만) — 복합결제 불가(공홈 명시), 발행 후 12개월 유효</li>
+        <li><b>조식 5만원 할인</b> 연 2회 — 5만↑ 결제 시, 1일 1회, <b>플래티넘 무료조식과 중복 가능</b></li>
+        <li>적립: 메리어트 5P / 해외·항공(직판)·택시·카페(스벅·커피빈·폴바셋·투썸) 3P / 기본 1P — <b>특별적립은 전월 국내 30만 필수</b>, 해외 할부 제외</li>
+        <li>엘리트 나이트 크레딧 <b>10개</b>/년 (계정당 최대 15개)</li>
+        <li>라운지: <b>TLM 앱 연 4회</b>(동반 1인) + <b>비자 선택서비스 연 3회</b>(스카이허브·마티나) = 최대 7회</li>
+        <li><b>호텔 발렛파킹 월 5회</b> — 워커힐·콘래드·신라·JW·안다즈 등 30곳 (전월 30만)</li>
+        <li><b>공항 발렛파킹 월 3회</b> — 인천 T1/T2·김포 (전월 30만)</li>
+        <li>연 1,000만→5천P, 2,000만→1만P, 6,000만→<b>플래티넘</b> 승급</li>
+      </ul>
+    </div>
+    <div class="summary">
+      <h3><i class="dot d-b"></i>+ Visa Signature 공통 (본보이 카드 탑재)</h3>
+      <ul>
+        <li>국내 특급호텔 69곳 <b>F&B 5~20% 할인</b> · 74곳 객실/패키지 5~60% · 스파 22곳</li>
+        <li><b>Visa Luxury Hotel Collection</b> — 전세계 900개 호텔 특전</li>
+        <li>부킹닷컴 10% 캐시백 · 호텔스닷컴/익스피디아 8% · IHG 아태 20% · Trip.com 호텔 6%</li>
+        <li>Visa 컨시어지 24시간 (080-4840-880 / 카톡 채널)</li>
+      </ul>
+    </div>
+    <div class="summary">
+      <h3>⏳ 공통 — 발급 직후 유예</h3>
+      <ul>
+        <li>3장 모두 <b>발급 후 등록월+1개월</b>은 전월 실적 없이 서비스 제공 (신규 발급 유예)</li>
+      </ul>
+    </div>
   </div>
-  <div class="summary">
-    <h3><i class="dot d-a"></i>현대 아멕스 The Platinum Edition2</h3>
-    <ul>
-      <li><b>연간 바우처 85만원</b> — 1년차 400만 / 2년차부터 3,600만 실적. 호텔·백화점·올리브영·무신사·네이버플러스·코스트코 전환</li>
-      <li>MR: 기본 1MR/1,000원 (전월 50만) · <b>5X</b> 특별적립 — 해외·호텔·항공·여행사·면세·골프 (영역별 한도 1.5만MR)</li>
-      <li><b>FHR</b> 전세계 특급호텔 — 업글·2인 조식·$100 크레딧·레이트 체크아웃. PLCC라 온라인 예약 불가, <b>컨시어지 전화 예약만</b></li>
-      <li><b>THC</b> 2박 이상 — $100 크레딧 + 업글</li>
-      <li>힐튼 골드 + <b>본보이 골드</b> + 래디슨 프리미엄 매칭 (MR사이트 신청)</li>
-      <li><b>센추리온 라운지</b> 본인 무제한 + 공항 리무진·호텔/공항 발레파킹</li>
-      <li>아멕스 다이닝: 국내 20여개 호텔 레스토랑 6만↑ <b>3만 할인</b> / 베이커리 4만↑ 2만 할인</li>
-    </ul>
+
+  <!-- ===== 레스토랑 뷰 ===== -->
+  <div id="view-dining" style="display:none">
+    <div class="warnbox"><b>공통 경고</b> — 룸차지 결제 불가 · 반드시 현장결제 · 테이블당 1회(카드 분할 불가) · 타 할인/멤버십 중복 불가 · 조식/음료/주류 등 호텔별 제외 품목 확인</div>
+    <div class="legend">
+      <span>레스토랑: <b style="color:var(--gold)">6만↑ 결제 시 3만 할인</b></span>
+      <span>베이커리: <b style="color:var(--gold)">4만↑ 결제 시 2만 할인</b></span>
+    </div>
+    <div class="warnbox" style="border-color:var(--line);background:rgba(201,169,106,.06)">현아플2 기준: <b>전월 50만 필수 · 월 1회 / 연 3회 (연 최대 9만)</b> — 6~8만대 결제에 아껴 쓸 것</div>
+    <div id="dlist"></div>
+    <div class="empty" id="dempty" style="display:none">검색 결과 없음</div>
   </div>
-  <div class="summary">
-    <h3><i class="dot d-b"></i>메리어트 본보이 The BEST (신한 Visa)</h3>
-    <ul>
-      <li><b>골드 엘리트</b> 자동 — 업글 우대·14시 레이트 체크아웃·포인트 +25%</li>
-      <li><b>무료숙박권 35K</b> 연 1매 (연회비 주기 실적 100만) — 복합결제 불가(공홈 명시), 발행 후 12개월 유효</li>
-      <li><b>조식 5만원 할인</b> 연 2회 — 5만↑ 결제 시, 1일 1회, <b>플래티넘 무료조식과 중복 가능</b></li>
-      <li>적립: 메리어트 5P / 해외·항공(직판)·택시·카페(스벅·커피빈·폴바셋·투썸) 3P / 기본 1P — <b>특별적립은 전월 국내 30만 필수</b>, 해외 할부 제외</li>
-      <li>엘리트 나이트 크레딧 <b>10개</b>/년 (계정당 최대 15개)</li>
-      <li>라운지: <b>TLM 앱 연 4회</b>(동반 1인) + <b>비자 선택서비스 연 3회</b>(스카이허브·마티나) = 최대 7회</li>
-      <li><b>호텔 발렛파킹 월 5회</b> — 워커힐·콘래드·신라·JW·안다즈 등 30곳 (전월 30만)</li>
-      <li><b>공항 발렛파킹 월 3회</b> — 인천 T1/T2·김포 (전월 30만)</li>
-      <li>연 1,000만→5천P, 2,000만→1만P, 6,000만→<b>플래티넘</b> 승급</li>
-    </ul>
+
+  <!-- ===== 발렛맵 뷰 ===== -->
+  <div id="view-valet" style="display:none">
+    <div class="legend">
+      <span><i class="dot d-h"></i>힐튼 (연 12회)</span>
+      <span><i class="dot d-b"></i>본보이 (월 5회·전월 30만)</span>
+      <span><i class="dot d-a"></i>현아플2 (전월 50만)</span>
+    </div>
+    <div id="vlist"></div>
+    <div class="section-title">✈ 공항 발렛</div>
+    <div id="valist"></div>
+    <div class="summary">
+      <h3>사용 순서 힌트</h3>
+      <ul>
+        <li><b>월 리셋(본보이 월5회) 먼저 소진</b>, 연 한도(힐튼 12회)는 아껴쓰기</li>
+        <li>중복 호텔(콘래드·힐튼경주)에서 특히 유효</li>
+        <li>발렛 무료여도 <b>주차요금은 별도</b>인 곳 있음 (공항·일부 호텔)</li>
+      </ul>
+    </div>
   </div>
-  <div class="summary">
-    <h3><i class="dot d-b"></i>+ Visa Signature 공통 (본보이 카드 탑재)</h3>
-    <ul>
-      <li>국내 특급호텔 69곳 <b>F&B 5~20% 할인</b> · 74곳 객실/패키지 5~60% · 스파 22곳</li>
-      <li><b>Visa Luxury Hotel Collection</b> — 전세계 900개 호텔 특전</li>
-      <li>부킹닷컴 10% 캐시백 · 호텔스닷컴/익스피디아 8% · IHG 아태 20% · Trip.com 호텔 6%</li>
-      <li>Visa 컨시어지 24시간 (080-4840-880 / 카톡 채널)</li>
-    </ul>
-  </div>
+
+  <div class="disclaim">혜택은 카드사·호텔 사정으로 변동 가능 · 고액 사용 전 <b>공홈 재확인</b></div>
 </main>
-<footer>혜택은 카드사·호텔 사정으로 변동 가능 · 고액 사용 전 <b>공홈 재확인</b></footer>
+
+<nav class="tabbar">
+  <button class="tab on" data-v="hotel"><span class="ico">🏨</span>호텔</button>
+  <button class="tab" data-v="dining"><span class="ico">🍽</span>레스토랑</button>
+  <button class="tab" data-v="valet"><span class="ico">🅿️</span>발렛맵</button>
+</nav>
+
 <script>
-const H='hilton',A='amex',B='bonvoy';
 const CARD_LABEL={hilton:['힐튼 아멕스','c-h','d-h'],amex:['아멕스 플래티넘','c-a','d-a'],bonvoy:['본보이 The BEST','c-b','d-b']};
-const DATA=[{"n":"쉐라톤 그랜드 인천","s":"송도 · 도보권","f":["incheon"],"b":{"bonvoy":["골드 엘리트: 업글 우대·14시 체크아웃","조식 5만원 할인 (연 2회)","결제 1,000원당 5P","35K 무료숙박권 사용 가능"],"amex":["본보이 골드 매칭(중복 시 상위 적용)","호텔 결제 5X: 1,000원당 5MR","아멕스 다이닝: 레스토랑 6만↑ 3만 할인"]}},{"n":"오크우드 프리미어 인천","s":"송도 · 파노라믹 65","f":["incheon","dining"],"b":{"amex":["호텔 결제 5X: 1,000원당 5MR","아멕스 다이닝 대상 여부 매장 확인"],"bonvoy":["해당 없음 — THE HMC 무료멤버십 식음 15%(주중)가 정답"]}},{"n":"콘래드 서울","s":"여의도 · 힐튼 계열","f":["seoul"],"b":{"hilton":["골드/다이아 등급 혜택: 조식·라운지·업글","주말 무료숙박권 2매 사용 가능","발렛파킹 연 12회 무료 + F&B 할인 연 4회","결제 시 힐튼 포인트 최대 적립"],"amex":["힐튼 골드 매칭","호텔 결제 5X: 1,000원당 5MR","Be My Guest: 아트리오·숯 더붓처스엣지 3만 할인 / 플레임즈 베이커리 2만 (12/20~31 제외)"],"bonvoy":["호텔 발렛파킹 무료 (월 5회 통합) — 힐튼 호텔에서 신한 비자로 발렛"]}},{"n":"힐튼 경주 · 더블트리 판교 · 가든인 강남","s":"국내 힐튼 포트폴리오 (부산은 힐튼 탈퇴)","f":["korea","seoul"],"b":{"hilton":["골드/다이아 등급 혜택","주말 무료숙박권 2매 사용 가능","발렛파킹 연 12회 무료 + F&B 할인 연 4회","힐튼 포인트 최대 적립"],"amex":["힐튼 골드 매칭","호텔 결제 5X: 1,000원당 5MR"]}},{"n":"조선 팰리스 서울 강남","s":"럭셔리 컬렉션 · 메리어트","f":["seoul","dining"],"b":{"bonvoy":["골드 엘리트 혜택","조식 5만원 할인 대상 (연 2회)","결제 5P/1,000원"],"amex":["본보이 골드 매칭","호텔 결제 5X: 1,000원당 5MR","Be My Guest 대상 아님 (웨스틴조선은 대상)"]}},{"n":"JW 메리어트 서울 / 동대문","s":"메리어트 플래그십","f":["seoul","dining"],"b":{"bonvoy":["골드 엘리트 혜택","조식 5만원 할인 (연 2회, 5만↑ 결제 시)","호텔 발렛파킹 무료 (월 5회 통합)","결제 5P/1,000원"],"amex":["본보이 골드 매칭","호텔 5X 적립(5MR)","Be My Guest: JW동대문 타볼로24·BLT만 대상 (JW서울 반포 미포함)"]}},{"n":"웨스틴 조선 서울 / 부산","s":"메리어트 계열","f":["seoul","korea","dining"],"b":{"bonvoy":["골드 엘리트 혜택","조식 5만원 할인 대상","결제 5P/1,000원"],"amex":["본보이 골드 매칭","호텔 5X 적립(5MR)","Be My Guest: 서울 아리아·루브리카·나인스게이트 / 부산 까밀리아·오킴스 등"]}},{"n":"코트야드 / 포포인츠 / 알로프트 서울권","s":"남대문·타임스퀘어·판교·명동·강남 등","f":["seoul"],"b":{"bonvoy":["골드 엘리트: 업글·레이트 체크아웃","35K 숙박권 소진에 최적 (평시 요금 낮음)","결제 5P/1,000원"],"amex":["본보이 골드 매칭"]}},{"n":"워커힐 (그랜드/비스타)","s":"독립 체인 · WPC 별도","f":["seoul","dining"],"b":{"amex":["호텔 결제 5X: 1,000원당 5MR","Be My Guest: 온달 6만↑ 3만 할인 (12/24·31 제외)"],"bonvoy":["호텔 발렛파킹 무료 (월 5회 통합, 전월 30만)","Visa Signature: 특급호텔 F&B 5~20% 할인 대상 확인"],"hilton":["해당 없음"]}},{"n":"전세계 힐튼 계열","s":"콘래드·월도프·힐튼·더블트리·가든인 外","f":["global"],"b":{"hilton":["주말 무료숙박권 전세계 사용 (환산가 50만/매)","골드/다이아: 조식·라운지·업글","포인트 숙박 결합 전략 유효"],"amex":["힐튼 골드 매칭","MR→힐튼 포인트 전환으로 포인트 숙박 보충"]}},{"n":"전세계 메리어트 계열","s":"리츠칼튼·세인트레지스·W·쉐라톤 外 8,900개","f":["global"],"b":{"bonvoy":["35K 숙박권 해외 사용 가능 (동남아 리조트 가성비 갑)","골드 엘리트 전 호텔 적용","해외 결제 3P/1,000원"],"amex":["본보이 골드 매칭","MR→본보이 포인트 전환"]}},{"n":"FHR / THC 참여 호텔","s":"아만·포시즌스·페닌슐라 급 1,100개","f":["global"],"b":{"amex":["FHR: 업글+2인 조식+$100급 크레딧+레이트 체크아웃","THC: 2박↑ $100 크레딧+업글","반드시 플래티넘 컨시어지로 예약"]}},{"n":"세이부 프린스 (일본 8개)","s":"도쿄 파크타워·오사카 베이·오키나와 外","f":["global"],"b":{"amex":["클럽 라운지 입장 (조식·칵테일아워)","레이트 체크아웃 + 웰컴 스낵","포켓 컨시어지: 일본 파인다이닝 10% 할인"]}},{"n":"국내 특급호텔 다이닝 공통","s":"아멕스 다이닝 서비스","f":["dining","seoul"],"b":{"amex":["레스토랑 6만↑ 3만 할인: 신라(라연·팔선 포함)·웨스틴조선·워커힐 온달·콘래드·포시즌스·파크하얏트·안다즈·JW동대문 등 21곳","베이커리 4만↑ 2만 할인: 콘래드 플레임즈·포시즌스 등 10곳","룸차지 결제 시 불가·현장결제 필수·타 할인 중복 불가"]}}];
-const list=document.getElementById('list'),q=document.getElementById('q'),empty=document.getElementById('empty');
-let filter='all';
-function render(){
+const DATA={"hotels":[{"id":"sheraton_incheon","name":"쉐라톤 그랜드 인천","type":"hotel","region":"incheon","sub":"송도 · 도보권","f":["incheon"],"valet":[],"benefits":{"bonvoy":["골드 엘리트: 업글 우대·14시 체크아웃","조식 5만원 할인 (연 2회)","결제 1,000원당 5P","35K 무료숙박권 사용 가능"],"amex":["본보이 골드 매칭(중복 시 상위 적용)","호텔 결제 5X: 1,000원당 5MR","아멕스 다이닝: 레스토랑 6만↑ 3만 할인"]}},{"id":"oakwood_incheon","name":"오크우드 프리미어 인천","type":"hotel","region":"incheon","sub":"송도 · 파노라믹 65","f":["incheon","dining"],"valet":[],"benefits":{"amex":["호텔 결제 5X: 1,000원당 5MR","아멕스 다이닝 대상 여부 매장 확인"],"bonvoy":["해당 없음 — THE HMC 무료멤버십 식음 15%(주중)가 정답"]}},{"id":"conrad_seoul","name":"콘래드 서울","type":"hotel","region":"seoul","sub":"여의도 · 힐튼 계열 · 발렛 3중","f":["seoul"],"valet":["hilton","bonvoy","amex"],"valet_hint":"월 리셋(본보이 월5회) 먼저 소진, 연 한도(힐튼 12회)는 아껴쓰기","benefits":{"hilton":["골드/다이아 등급 혜택: 조식·라운지·업글","주말 무료숙박권 2매 사용 가능","발렛파킹 연 12회 무료 + F&B 할인 연 4회","결제 시 힐튼 포인트 최대 적립"],"amex":["힐튼 골드 매칭","호텔 결제 5X: 1,000원당 5MR","Be My Guest: 아트리오·숯 더붓처스엣지 3만 할인 / 플레임즈 베이커리 2만 (12/20~31 제외)"],"bonvoy":["호텔 발렛파킹 무료 (월 5회 통합) — 힐튼 호텔에서 신한 비자로 발렛"]}},{"id":"hilton_domestic","name":"힐튼 경주 · 더블트리 판교 · 가든인 강남","type":"hotel","region":"korea","sub":"국내 힐튼 포트폴리오 (부산은 힐튼 탈퇴)","f":["korea","seoul"],"valet":["hilton","amex"],"valet_hint":"힐튼경주는 본보이 발렛도 가능 (3중)","benefits":{"hilton":["골드/다이아 등급 혜택","주말 무료숙박권 2매 사용 가능","발렛파킹 연 12회 무료 + F&B 할인 연 4회","힐튼 포인트 최대 적립"],"amex":["힐튼 골드 매칭","호텔 결제 5X: 1,000원당 5MR"]}},{"id":"josun_palace","name":"조선 팰리스 서울 강남","type":"hotel","region":"seoul","sub":"럭셔리 컬렉션 · 메리어트","f":["seoul","dining"],"valet":[],"benefits":{"bonvoy":["골드 엘리트 혜택","조식 5만원 할인 대상 (연 2회)","결제 5P/1,000원"],"amex":["본보이 골드 매칭","호텔 결제 5X: 1,000원당 5MR","Be My Guest 대상 아님 (웨스틴조선은 대상)"]}},{"id":"jw_seoul","name":"JW 메리어트 서울 / 동대문","type":"hotel","region":"seoul","sub":"메리어트 플래그십","f":["seoul","dining"],"valet":["bonvoy","amex"],"benefits":{"bonvoy":["골드 엘리트 혜택","조식 5만원 할인 (연 2회, 5만↑ 결제 시)","호텔 발렛파킹 무료 (월 5회 통합)","결제 5P/1,000원"],"amex":["본보이 골드 매칭","호텔 5X 적립(5MR)","Be My Guest: JW동대문 타볼로24·BLT만 대상 (JW서울 반포 미포함)","아멕스 발렛: JW서울은 5만↑ 영수증 필요"]}},{"id":"westin_josun","name":"웨스틴 조선 서울 / 부산","type":"hotel","region":"seoul","sub":"메리어트 계열","f":["seoul","korea","dining"],"valet":["amex"],"valet_hint":"부산만 아멕스 발렛 (서울 미대상)","benefits":{"bonvoy":["골드 엘리트 혜택","조식 5만원 할인 대상","결제 5P/1,000원"],"amex":["본보이 골드 매칭","호텔 5X 적립(5MR)","Be My Guest: 서울 아리아·루브리카·나인스게이트 / 부산 까밀리아·오킴스 등"]}},{"id":"courtyard_group","name":"코트야드 / 포포인츠 / 알로프트 서울권","type":"hotel","region":"seoul","sub":"남대문·타임스퀘어·판교·명동·강남 등","f":["seoul"],"valet":["amex"],"valet_hint":"코트야드 타임스퀘어만 아멕스 발렛","benefits":{"bonvoy":["골드 엘리트: 업글·레이트 체크아웃","35K 숙박권 소진에 최적 (평시 요금 낮음)","결제 5P/1,000원"],"amex":["본보이 골드 매칭"]}},{"id":"walkerhill","name":"워커힐 (그랜드/비스타)","type":"hotel","region":"seoul","sub":"독립 체인 · WPC 별도","f":["seoul","dining"],"valet":["bonvoy","amex"],"benefits":{"amex":["호텔 결제 5X: 1,000원당 5MR","Be My Guest: 온달 6만↑ 3만 할인 (12/24·31 제외)"],"bonvoy":["호텔 발렛파킹 무료 (월 5회 통합, 전월 30만)","Visa Signature: 특급호텔 F&B 5~20% 할인 대상 확인"],"hilton":["해당 없음"]}},{"id":"global_hilton","name":"전세계 힐튼 계열","type":"hotel","region":"global","sub":"콘래드·월도프·힐튼·더블트리·가든인 外","f":["global"],"valet":[],"benefits":{"hilton":["주말 무료숙박권 전세계 사용 (환산가 50만/매)","골드/다이아: 조식·라운지·업글","포인트 숙박 결합 전략 유효"],"amex":["힐튼 골드 매칭","MR→힐튼 포인트 전환으로 포인트 숙박 보충"]}},{"id":"global_marriott","name":"전세계 메리어트 계열","type":"hotel","region":"global","sub":"리츠칼튼·세인트레지스·W·쉐라톤 外 8,900개","f":["global"],"valet":[],"benefits":{"bonvoy":["35K 숙박권 해외 사용 가능 (동남아 리조트 가성비 갑)","골드 엘리트 전 호텔 적용","해외 결제 3P/1,000원"],"amex":["본보이 골드 매칭","MR→본보이 포인트 전환"]}},{"id":"fhr_thc","name":"FHR / THC 참여 호텔","type":"hotel","region":"global","sub":"아만·포시즌스·페닌슐라 급 1,100개","f":["global"],"valet":[],"benefits":{"amex":["FHR: 업글+2인 조식+$100급 크레딧+레이트 체크아웃","THC: 2박↑ $100 크레딧+업글","반드시 플래티넘 컨시어지로 예약"]}},{"id":"seibu_prince","name":"세이부 프린스 (일본 8개)","type":"hotel","region":"global","sub":"도쿄 파크타워·오사카 베이·오키나와 外","f":["global"],"valet":[],"benefits":{"amex":["클럽 라운지 입장 (조식·칵테일아워)","레이트 체크아웃 + 웰컴 스낵","포켓 컨시어지: 일본 파인다이닝 10% 할인"]}},{"id":"dining_common","name":"국내 특급호텔 다이닝 공통","type":"hotel","region":"seoul","sub":"아멕스 다이닝 서비스","f":["dining","seoul"],"valet":[],"benefits":{"amex":["레스토랑 6만↑ 3만 할인: 신라·웨스틴조선·워커힐·콘래드·포시즌스·파크하얏트·안다즈·JW동대문 등 21곳 (→ 레스토랑 탭)","베이커리 4만↑ 2만 할인: 콘래드 플레임즈·포시즌스 등 10곳","전월 50만 필수 · 월 1회 / 연 3회 (연 최대 9만) — 6~8만대 결제에 아껴 쓸 것 ※연 3회는 아멕스 공홈 기준, 현대 상품설명서와 불일치 시 알림"]}}],"restaurants":[{"id":"r_shilla","name":"서울 신라 호텔","outlets":"콘티넨탈 · 라연 · 팔선 · 아리아께 · 더 파크뷰","region":"seoul","kind":"rest","exclude":"제외기간 없음","bonvoy_breakfast":false,"visa_fnb":true},{"id":"r_westin_seoul","name":"웨스틴 조선 서울","outlets":"아리아 · 루브리카 · 나인스게이트","region":"seoul","kind":"rest","exclude":"5/5, 12/24~25, 12/31","bonvoy_breakfast":true,"visa_fnb":true},{"id":"r_walkerhill","name":"그랜드 워커힐 서울","outlets":"온달","region":"seoul","kind":"rest","exclude":"12/24, 12/31","bonvoy_breakfast":false,"visa_fnb":true},{"id":"r_conrad","name":"콘래드 서울","outlets":"아트리오 · 숯 더 붓처스엣지","region":"seoul","kind":"rest","exclude":"1/1, 서울불꽃축제, 12/20~31","bonvoy_breakfast":false,"visa_fnb":true},{"id":"r_banyan","name":"반얀트리 클럽 앤 스파 서울","outlets":"그라넘 다이닝 라운지 · 페스타 바이 충후","region":"seoul","kind":"rest","exclude":"제외기간 없음","bonvoy_breakfast":false,"visa_fnb":true},{"id":"r_fourseasons","name":"포시즌스 호텔 서울","outlets":"더 마켓키친","region":"seoul","kind":"rest","exclude":"12/20~31","bonvoy_breakfast":false,"visa_fnb":true},{"id":"r_intercon","name":"그랜드 인터컨티넨탈 파르나스","outlets":"그랜드 키친","region":"seoul","kind":"rest","exclude":"12/24~31","bonvoy_breakfast":false,"visa_fnb":true},{"id":"r_pullman","name":"앰배서더 서울 풀만","outlets":"더 킹스 · 풀 하우스 테라스","region":"seoul","kind":"rest","exclude":"제외기간 없음","bonvoy_breakfast":false,"visa_fnb":true},{"id":"r_mercure","name":"그랜드 머큐어 임피리얼 팰리스","outlets":"뷔페 패밀리아 · 중식당 천산","region":"seoul","kind":"rest","exclude":"12/24~25, 12/31","bonvoy_breakfast":false,"visa_fnb":false},{"id":"r_novotel_ddm","name":"노보텔 앰배서더 동대문","outlets":"푸드익스체인지 · 고메바&다이닝","region":"seoul","kind":"rest","exclude":"제외기간 없음","bonvoy_breakfast":false,"visa_fnb":false},{"id":"r_jw_ddm","name":"JW 메리어트 동대문","outlets":"타볼로 24 · BLT 스테이크","region":"seoul","kind":"rest","exclude":"1/1, 5/5, 12/24~25, 12/31","bonvoy_breakfast":true,"visa_fnb":true},{"id":"r_parkhyatt","name":"파크 하얏트 서울","outlets":"코너스톤 · 더 팀버 하우스","region":"seoul","kind":"rest","exclude":"12/24~26, 12/31","bonvoy_breakfast":false,"visa_fnb":true},{"id":"r_andaz","name":"안다즈 서울 강남","outlets":"조각보 바이츠앤와인 · 키친 · 미트앤코","region":"seoul","kind":"rest","exclude":"5/5, 12/24~25, 12/31","bonvoy_breakfast":false,"visa_fnb":true},{"id":"r_naru","name":"호텔 나루 엠갤러리","outlets":"레스토랑 부아쟁","region":"seoul","kind":"rest","exclude":"발렌타인, 서울불꽃축제, 12/24~31","bonvoy_breakfast":false,"visa_fnb":false},{"id":"r_doubletree","name":"더블트리 힐튼 판교","outlets":"데메테르(런치·디너 뷔페만) · 루프탑","region":"seoul","kind":"rest","exclude":"1/1, 5/5, 12/24~25, 12/31","bonvoy_breakfast":false,"visa_fnb":false},{"id":"r_westin_busan","name":"웨스틴 조선 부산","outlets":"까밀리아 · 오킴스 · 파노라마 · 셔블","region":"korea","kind":"rest","exclude":"제외기간 없음","bonvoy_breakfast":true,"visa_fnb":true},{"id":"r_gj_busan","name":"그랜드 조선 부산","outlets":"아리아 · 팔레드신 · 테라스292","region":"korea","kind":"rest","exclude":"1/1, 5/5, 12/24~26, 12/31","bonvoy_breakfast":false,"visa_fnb":true},{"id":"r_ph_busan","name":"파크하얏트 부산","outlets":"리빙룸 · 다이닝 룸 (사전예약 필수)","region":"korea","kind":"rest","exclude":"부산불꽃축제, 12/24~25, 12/31, 이벤트 기간","bonvoy_breakfast":false,"visa_fnb":true},{"id":"r_paradise","name":"파라다이스 부산","outlets":"라스칼라 · 사까에","region":"korea","kind":"rest","exclude":"제외기간 없음","bonvoy_breakfast":false,"visa_fnb":true},{"id":"r_gj_jeju","name":"그랜드 조선 제주","outlets":"아리아","region":"korea","kind":"rest","exclude":"5/5, 12/24~25, 이벤트일","bonvoy_breakfast":false,"visa_fnb":true},{"id":"r_parnas_jeju","name":"파르나스 호텔 제주","outlets":"콘페티","region":"korea","kind":"rest","exclude":"제외기간 없음","bonvoy_breakfast":false,"visa_fnb":false},{"id":"r_family","name":"패밀리 레스토랑 (전국)","outlets":"아웃백(딜리버리 제외) · Chai797 · 정육점 · 63스퀘어(워킹온더클라우드·터치더스카이·슈치쿠·백리향)","region":"seoul","kind":"rest","exclude":"아웃백은 자체 멤버십·통신사 할인과 중복 불가","bonvoy_breakfast":false,"visa_fnb":false},{"id":"b_plaza","name":"더 플라자 호텔","outlets":"블랑제리 더플라자 (※2026.10.1 영업 종료 예정)","region":"seoul","kind":"bakery","exclude":"제외기간 없음","bonvoy_breakfast":false,"visa_fnb":true},{"id":"b_conrad","name":"콘래드 서울","outlets":"플레임즈","region":"seoul","kind":"bakery","exclude":"1/1, 서울불꽃축제, 12/20~31","bonvoy_breakfast":false,"visa_fnb":true},{"id":"b_fourseasons","name":"포시즌스 호텔 서울","outlets":"컨팩션즈 (빵·케이크류만)","region":"seoul","kind":"bakery","exclude":"12/20~31","bonvoy_breakfast":false,"visa_fnb":true},{"id":"b_pullman","name":"앰배서더 서울 풀만","outlets":"1955 그로세리아","region":"seoul","kind":"bakery","exclude":"제외기간 없음","bonvoy_breakfast":false,"visa_fnb":true},{"id":"b_novotel_ddm","name":"노보텔 앰배서더 동대문","outlets":"The Deli","region":"seoul","kind":"bakery","exclude":"제외기간 없음","bonvoy_breakfast":false,"visa_fnb":false},{"id":"b_naru","name":"호텔 나루 엠갤러리","outlets":"마포 에이트","region":"seoul","kind":"bakery","exclude":"발렌타인, 서울불꽃축제, 12/24~31","bonvoy_breakfast":false,"visa_fnb":false},{"id":"b_doubletree","name":"더블트리 힐튼 판교","outlets":"CAFFE (홀케이크만)","region":"seoul","kind":"bakery","exclude":"1/1, 5/5, 12/24~25, 12/31","bonvoy_breakfast":false,"visa_fnb":false},{"id":"b_westin_busan","name":"웨스틴 조선 부산","outlets":"조선델리","region":"korea","kind":"bakery","exclude":"제외기간 없음","bonvoy_breakfast":true,"visa_fnb":true},{"id":"b_gj_busan","name":"그랜드 조선 부산","outlets":"조선델리","region":"korea","kind":"bakery","exclude":"1/1, 5/5, 12/24~26, 12/31","bonvoy_breakfast":false,"visa_fnb":true},{"id":"b_lotte_busan","name":"롯데 호텔 부산","outlets":"델리카한스 · 더라운지앤바","region":"korea","kind":"bakery","exclude":"제외기간 없음","bonvoy_breakfast":false,"visa_fnb":true}],"valet_hotels":[{"name":"콘래드 서울","region":"서울","cards":["hilton","bonvoy","amex"],"note":"3중 — 본보이(월) 먼저, 힐튼(연12) 아껴쓰기"},{"name":"그랜드 워커힐","region":"서울","cards":["bonvoy","amex"],"note":""},{"name":"비스타 워커힐","region":"서울","cards":["bonvoy","amex"],"note":""},{"name":"서울 신라","region":"서울","cards":["bonvoy","amex"],"note":""},{"name":"JW 메리어트 서울","region":"서울","cards":["bonvoy","amex"],"note":"아멕스는 5만↑ 영수증"},{"name":"JW 메리어트 동대문","region":"서울","cards":["bonvoy","amex"],"note":""},{"name":"안다즈 서울 강남","region":"서울","cards":["bonvoy","amex"],"note":""},{"name":"그랜드 하얏트 서울","region":"서울","cards":["bonvoy","amex"],"note":""},{"name":"파크 하얏트 서울","region":"서울","cards":["amex"],"note":"당일 2만↑ 영수증"},{"name":"반얀트리 서울","region":"서울","cards":["amex"],"note":""},{"name":"포시즌스 서울","region":"서울","cards":["amex"],"note":"당일 3만↑ 영수증"},{"name":"더 플라자","region":"서울","cards":["bonvoy","amex"],"note":"아멕스는 2026.10.1 종료"},{"name":"레스케이프","region":"서울","cards":["bonvoy"],"note":""},{"name":"몬드리안 이태원","region":"서울","cards":["bonvoy","amex"],"note":"아멕스는 2.5만↑ 결제"},{"name":"그랜드 인터컨 파르나스","region":"서울","cards":["amex"],"note":"주차 등록 필수"},{"name":"노보텔 강남","region":"서울","cards":["bonvoy","amex"],"note":""},{"name":"노보텔 동대문","region":"서울","cards":["bonvoy","amex"],"note":""},{"name":"앰배서더 풀만","region":"서울","cards":["bonvoy","amex"],"note":""},{"name":"소피텔 앰배서더","region":"서울","cards":["amex"],"note":"객실·식음·스파 이용 시"},{"name":"스위스 그랜드","region":"서울","cards":["bonvoy"],"note":""},{"name":"메이필드","region":"서울","cards":["bonvoy","amex"],"note":""},{"name":"서울가든","region":"서울","cards":["bonvoy","amex"],"note":""},{"name":"서울 드래곤시티","region":"서울","cards":["bonvoy","amex"],"note":""},{"name":"오크우드 코엑스","region":"서울","cards":["bonvoy","amex"],"note":""},{"name":"글래드 강남 코엑스","region":"서울","cards":["bonvoy"],"note":""},{"name":"AC호텔 강남","region":"서울","cards":["bonvoy","amex"],"note":"4시간 무료"},{"name":"힐튼 가든인 강남","region":"서울","cards":["hilton","amex"],"note":"4시간 무료"},{"name":"메리어트 이그제큐티브","region":"서울","cards":["bonvoy","amex"],"note":""},{"name":"호텔나루 엠갤러리","region":"서울","cards":["bonvoy","amex"],"note":""},{"name":"르메르디앙 명동","region":"서울","cards":["amex"],"note":""},{"name":"아셈타워","region":"서울","cards":["amex"],"note":""},{"name":"코트야드 타임스퀘어","region":"서울","cards":["amex"],"note":""},{"name":"더블트리 판교","region":"수도권","cards":["hilton","amex"],"note":""},{"name":"그랜드 하얏트 인천","region":"수도권","cards":["bonvoy","amex"],"note":""},{"name":"인스파이어 리조트","region":"수도권","cards":["amex"],"note":"행사·성수기 제한 가능"},{"name":"소노캄 고양","region":"수도권","cards":["amex"],"note":""},{"name":"파크하얏트 부산","region":"부산","cards":["bonvoy","amex"],"note":""},{"name":"파라다이스 부산","region":"부산","cards":["bonvoy"],"note":""},{"name":"웨스틴 조선 부산","region":"부산","cards":["amex"],"note":""},{"name":"그랜드 조선 부산","region":"부산","cards":["amex"],"note":""},{"name":"힐튼 경주","region":"지방","cards":["hilton","bonvoy","amex"],"note":"3중 — 본보이(월) 먼저"},{"name":"대구 메리어트","region":"지방","cards":["bonvoy","amex"],"note":""},{"name":"인터불고 대구","region":"지방","cards":["bonvoy","amex"],"note":""},{"name":"그랜드 머큐어 창원","region":"지방","cards":["bonvoy"],"note":""},{"name":"소노캄 여수","region":"지방","cards":["amex"],"note":""},{"name":"호텔 오노마 대전","region":"지방","cards":["amex"],"note":""},{"name":"그랜드 조선 제주","region":"지방","cards":["amex"],"note":""}],"airport_valet":[{"name":"인천 T1 / T2 · 김포","cards":["bonvoy"],"note":"본보이 월 3회 통합 (전월 30만) · 주차요금 본인 부담 · 사전예약 권장"},{"name":"인천 T1 / T2 · 김포 · 청주","cards":["amex"],"note":"현아플2 (전월 50만) · 공항 리무진/공항철도 혜택 별도"}]};
+const CHIP_SETS={
+  hotel:[['all','전체'],['incheon','인천·송도'],['seoul','서울'],['korea','지방'],['global','해외'],['dining','다이닝']],
+  dining:[['all','전체'],['rest','레스토랑'],['bakery','베이커리'],['seoul','수도권'],['korea','지방']],
+  valet:[['all','전체'],['hilton','힐튼'],['bonvoy','본보이'],['amex','현아플']]
+};
+let view='hotel', filter='all';
+const $=id=>document.getElementById(id);
+const q=$('q');
+
+function pbadge(cards){
+  if(!cards||!cards.length)return '';
+  return `<span class="pbadge"><span class="p">P</span>${cards.map(c=>`<i class="dot ${CARD_LABEL[c][2]}"></i>`).join('')}</span>`;
+}
+function renderHotel(){
   const kw=q.value.trim().toLowerCase();
-  let html='';let cnt=0;
-  DATA.forEach((d,i)=>{
+  let html='',cnt=0;
+  DATA.hotels.forEach((d,i)=>{
     if(filter!=='all'&&!d.f.includes(filter))return;
-    if(kw&&!(d.n+d.s+Object.values(d.b).flat().join('')).toLowerCase().includes(kw))return;
+    if(kw&&!(d.name+d.sub+Object.values(d.benefits).flat().join('')).toLowerCase().includes(kw))return;
     cnt++;
-    const dots=Object.keys(d.b).filter(k=>!d.b[k][0].startsWith('해당 없음')).map(k=>`<i class="dot ${CARD_LABEL[k][2]}"></i>`).join('');
-    const benes=Object.entries(d.b).map(([k,v])=>`
+    const dots=Object.keys(d.benefits).filter(k=>!d.benefits[k][0].startsWith('해당 없음')).map(k=>`<i class="dot ${CARD_LABEL[k][2]}"></i>`).join('');
+    const hint=d.valet_hint?`<div class="bene"><div class="bene-card" style="color:var(--gold)">🅿 발렛 힌트</div><ul><li>${d.valet_hint}</li></ul></div>`:'';
+    const benes=Object.entries(d.benefits).map(([k,v])=>`
       <div class="bene"><div class="bene-card ${CARD_LABEL[k][1]}"><i class="dot ${CARD_LABEL[k][2]}"></i>${CARD_LABEL[k][0]}</div>
-      <ul>${v.map(x=>`<li>${x.replace(/(무료숙박권|조식 5만원 할인|3만 할인|3MR|골드|다이아몬드|다이아|플래티넘|FHR|THC|클럽 라운지|5P|35K|50만)/g,'<b>$1</b>')}</li>`).join('')}</ul></div>`).join('');
+      <ul>${v.map(x=>`<li>${x.replace(/(무료숙박권|조식 5만원 할인|3만 할인|골드|다이아몬드|다이아|플래티넘|FHR|THC|클럽 라운지|5P|35K|50만|월 1회 \/ 연 3회)/g,'<b>$1</b>')}</li>`).join('')}</ul></div>`).join('');
     html+=`<div class="hotel" id="h${i}">
       <div class="hotel-head" onclick="document.getElementById('h${i}').classList.toggle('open')">
-        <div class="hotel-name">${d.n}<small>${d.s}</small></div>
-        <div class="dots">${dots}</div><span class="arrow">▶</span>
+        <div class="hotel-name">${d.name}<small>${d.sub}</small></div>
+        <div class="dots">${pbadge(d.valet)}${dots}</div><span class="arrow">▶</span>
       </div>
-      <div class="hotel-body">${benes}</div></div>`;
+      <div class="hotel-body">${hint}${benes}</div></div>`;
   });
-  list.innerHTML=html;
-  empty.style.display=cnt?'none':'block';
+  $('list').innerHTML=html;
+  $('empty').style.display=cnt?'none':'block';
+}
+function renderDining(){
+  const kw=q.value.trim().toLowerCase();
+  let html='',cnt=0;
+  DATA.restaurants.forEach(r=>{
+    if(filter==='rest'&&r.kind!=='rest')return;
+    if(filter==='bakery'&&r.kind!=='bakery')return;
+    if((filter==='seoul'||filter==='korea')&&r.region!==filter)return;
+    if(kw&&!(r.name+r.outlets).toLowerCase().includes(kw))return;
+    cnt++;
+    const amt=r.kind==='bakery'?'4만↑ → <b>2만 할인</b>':'6만↑ → <b>3만 할인</b>';
+    const tags=[
+      `<span class="rtag hl">${r.kind==='bakery'?'베이커리':'레스토랑'}</span>`,
+      r.bonvoy_breakfast?'<span class="rtag bv">본보이 조식 5만 할인 대상</span>':'',
+      r.visa_fnb?'<span class="rtag">Visa Sig F&B 5~20% 확인</span>':''
+    ].join('');
+    html+=`<div class="hotel">
+      <div class="hotel-head" onclick="this.parentElement.classList.toggle('open')">
+        <div class="hotel-name">${r.name}<small>${r.outlets}</small></div>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="hotel-body"><div class="bene"><div class="bene-card c-a"><i class="dot d-a"></i>Be My Guest</div>
+      <ul><li>${amt}</li><li>제외: ${r.exclude}</li></ul></div>
+      <div class="rmeta">${tags}</div></div></div>`;
+  });
+  $('dlist').innerHTML=html;
+  $('dempty').style.display=cnt?'none':'block';
+}
+function renderValet(){
+  const regions=[...new Set(DATA.valet_hotels.map(v=>v.region))];
+  let html='';
+  regions.forEach(rg=>{
+    const rows=DATA.valet_hotels.filter(v=>v.region===rg&&(filter==='all'||v.cards.includes(filter)));
+    if(!rows.length)return;
+    html+=`<div class="vregion">${rg} <small style="color:var(--sand);font-size:11px">(${rows.length})</small></div>`;
+    rows.forEach(v=>{
+      html+=`<div class="vrow"><div class="vname">${v.name}${v.note?`<small>${v.note}</small>`:''}</div>
+        <div class="vdots">${v.cards.map(c=>`<i class="dot ${CARD_LABEL[c][2]}"></i>`).join('')}</div></div>`;
+    });
+  });
+  $('vlist').innerHTML=html;
+  $('valist').innerHTML=DATA.airport_valet
+    .filter(a=>filter==='all'||a.cards.includes(filter))
+    .map(a=>`<div class="vrow"><div class="vname">${a.name}<small>${a.note}</small></div>
+      <div class="vdots">${a.cards.map(c=>`<i class="dot ${CARD_LABEL[c][2]}"></i>`).join('')}</div></div>`).join('');
+}
+function render(){
+  if(view==='hotel')renderHotel();
+  else if(view==='dining')renderDining();
+  else renderValet();
+}
+function setChips(){
+  $('chips').innerHTML=CHIP_SETS[view].map(([f,label],i)=>
+    `<button class="chip${i===0?' on':''}" data-f="${f}">${label}</button>`).join('');
+  filter='all';
+}
+function setView(v){
+  view=v;
+  ['hotel','dining','valet'].forEach(x=>{
+    $('view-'+x).style.display=x===v?'':'none';
+  });
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.v===v));
+  $('searchWrap').style.display=v==='valet'?'none':'flex';
+  setChips();render();
+  window.scrollTo(0,0);
 }
 q.addEventListener('input',render);
-document.getElementById('chips').addEventListener('click',e=>{
+$('chips').addEventListener('click',e=>{
   if(!e.target.dataset.f)return;
   document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
   e.target.classList.add('on');filter=e.target.dataset.f;render();
 });
-render();
+document.querySelector('.tabbar').addEventListener('click',e=>{
+  const t=e.target.closest('.tab');if(t)setView(t.dataset.v);
+});
+setChips();render();
 </script>
 </body>
 </html>
