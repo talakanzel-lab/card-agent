@@ -17,6 +17,7 @@
   --hilton:#3E5FA8; --amex:#AEB4BC; --bonvoy:#C8785A;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+.hotel-head,.tab,.chip,.vrow{touch-action:manipulation;-webkit-user-select:none;user-select:none}
 body{background:var(--pine);color:var(--ivory);font-family:'Noto Sans KR',sans-serif;font-size:15px;line-height:1.55;padding-bottom:86px}
 header{padding:26px 18px 12px;border-bottom:1px solid var(--line);position:sticky;top:0;background:linear-gradient(var(--pine) 82%,rgba(20,31,27,.94));z-index:10;backdrop-filter:blur(6px)}
 h1{font-family:'Noto Serif KR',serif;font-weight:700;font-size:24px;letter-spacing:-.5px}
@@ -89,7 +90,7 @@ main{padding:6px 14px}
 <body>
 <header>
   <h1>어디서 <em>긁지</em></h1>
-  <div class="sub">호텔 × 카드 혜택 컨시어지 · 2026.07 기준</div>
+  <div class="sub">호텔 × 카드 혜택 컨시어지 · 2026.07 기준 · b0705-0044</div>
   <div class="search" id="searchWrap"><input id="q" type="search" placeholder="호텔·매장 검색 (예: 콘래드, 온달, 조식)"></div>
   <div class="chips" id="chips"></div>
 </header>
@@ -230,8 +231,8 @@ function renderHotel(){
     const benes=Object.entries(d.benefits).map(([k,v])=>`
       <div class="bene"><div class="bene-card ${CARD_LABEL[k][1]}"><i class="dot ${CARD_LABEL[k][2]}"></i>${CARD_LABEL[k][0]}</div>
       <ul>${v.map(x=>`<li>${x.replace(/(무료숙박권|조식 5만원 할인|3만 할인|골드|다이아몬드|다이아|플래티넘|FHR|THC|클럽 라운지|5P|35K|50만|월 1회 \/ 연 3회)/g,'<b>$1</b>')}</li>`).join('')}</ul></div>`).join('');
-    html+=`<div class="hotel" id="h${i}">
-      <div class="hotel-head" onclick="document.getElementById('h${i}').classList.toggle('open')">
+    html+=`<div class="hotel">
+      <div class="hotel-head">
         <div class="hotel-name">${d.name}<small>${d.sub}</small></div>
         <div class="dots">${pbadge(d.valet)}${dots}</div><span class="arrow">▶</span>
       </div>
@@ -256,7 +257,7 @@ function renderDining(){
       r.visa_fnb?'<span class="rtag">Visa Sig F&B 5~20% 확인</span>':''
     ].join('');
     html+=`<div class="hotel">
-      <div class="hotel-head" onclick="this.parentElement.classList.toggle('open')">
+      <div class="hotel-head">
         <div class="hotel-name">${r.name}<small>${r.outlets}</small></div>
         <span class="arrow">▶</span>
       </div>
@@ -305,16 +306,32 @@ function setView(v){
   setChips();render();
   window.scrollTo(0,0);
 }
+// 이벤트 위임: 전부 document 레벨 (동적 엘리먼트 바인딩 타이밍 이슈 원천 차단)
 q.addEventListener('input',render);
-$('chips').addEventListener('click',e=>{
-  if(!e.target.dataset.f)return;
-  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
-  e.target.classList.add('on');filter=e.target.dataset.f;render();
+document.addEventListener('click',e=>{
+  const tab=e.target.closest('.tab');
+  if(tab){setView(tab.dataset.v);return;}
+  const chip=e.target.closest('.chip');
+  if(chip&&chip.dataset.f){
+    document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+    chip.classList.add('on');filter=chip.dataset.f;render();return;
+  }
+  const head=e.target.closest('.hotel-head');
+  if(head){head.parentElement.classList.toggle('open');return;}
 });
-document.querySelector('.tabbar').addEventListener('click',e=>{
-  const t=e.target.closest('.tab');if(t)setView(t.dataset.v);
+// 오류 가시화: 조용히 죽지 않게
+window.addEventListener('error',ev=>{
+  const el=$('list');
+  if(el)el.insertAdjacentHTML('afterbegin',
+    `<div class="warnbox"><b>오류</b> — ${ev.message||'스크립트 오류'}<br>새로고침 해주세요</div>`);
 });
-setChips();render();
+try{
+  setChips();render();
+  if(!DATA.hotels.length)$('list').innerHTML='<div class="empty">데이터 없음 — 캐시 문제일 수 있습니다. 새로고침 해주세요</div>';
+}catch(ex){
+  document.querySelector('main').insertAdjacentHTML('afterbegin',
+    `<div class="warnbox"><b>초기화 오류</b> — ${ex.message}<br>새로고침 해주세요</div>`);
+}
 </script>
 </body>
 </html>
