@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#141F1B">
+<title>어디서 긁지 — 카드 컨시어지</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pine:#141F1B; --pine2:#1C2B26; --ivory:#F2EDE3; --sand:#BFB6A4;
+  --gold:#C9A96A; --line:rgba(201,169,106,.22);
+  --hilton:#3E5FA8; --amex:#AEB4BC; --bonvoy:#C8785A;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--pine);color:var(--ivory);font-family:'Noto Sans KR',sans-serif;font-size:15px;line-height:1.55;padding-bottom:70px}
+header{padding:26px 18px 12px;border-bottom:1px solid var(--line);position:sticky;top:0;background:linear-gradient(var(--pine) 82%,rgba(20,31,27,.94));z-index:10;backdrop-filter:blur(6px)}
+h1{font-family:'Noto Serif KR',serif;font-weight:700;font-size:24px;letter-spacing:-.5px}
+h1 em{font-style:normal;color:var(--gold)}
+.sub{color:var(--sand);font-size:12px;margin-top:2px}
+.search{margin-top:12px;display:flex;gap:8px}
+.search input{flex:1;background:var(--pine2);border:1px solid var(--line);border-radius:10px;padding:11px 14px;color:var(--ivory);font-size:15px;font-family:inherit;outline:none}
+.search input:focus{border-color:var(--gold)}
+.chips{display:flex;gap:7px;overflow-x:auto;padding:10px 0 4px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);border-radius:999px;padding:5px 13px;font-size:12.5px;color:var(--sand);background:transparent;font-family:inherit;cursor:pointer}
+.chip.on{background:var(--gold);color:var(--pine);border-color:var(--gold);font-weight:700}
+main{padding:6px 14px}
+.legend{display:flex;gap:14px;padding:12px 4px;color:var(--sand);font-size:11.5px}
+.legend span{display:flex;align-items:center;gap:5px}
+.dot{width:8px;height:8px;border-radius:50%}
+.d-h{background:var(--hilton)}.d-a{background:var(--amex)}.d-b{background:var(--bonvoy)}
+.hotel{border:1px solid var(--line);border-radius:14px;margin-bottom:10px;background:var(--pine2);overflow:hidden}
+.hotel-head{display:flex;align-items:center;gap:10px;padding:13px 15px;cursor:pointer}
+.hotel-name{font-weight:700;font-size:15.5px;flex:1}
+.hotel-name small{display:block;font-weight:400;color:var(--sand);font-size:11.5px;margin-top:1px}
+.dots{display:flex;gap:5px}
+.arrow{color:var(--sand);font-size:11px;transition:transform .2s}
+.hotel.open .arrow{transform:rotate(90deg)}
+.hotel-body{display:none;padding:0 15px 14px;border-top:1px dashed var(--line)}
+.hotel.open .hotel-body{display:block}
+.bene{margin-top:12px}
+.bene-card{font-size:11px;font-weight:700;letter-spacing:.06em;display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.c-h{color:#8FA8E0}.c-a{color:#C9CED6}.c-b{color:#E0A088}
+.bene ul{list-style:none}
+.bene li{padding:3px 0 3px 14px;position:relative;font-size:13.5px;color:var(--ivory)}
+.bene li::before{content:"—";position:absolute;left:0;color:var(--gold);font-size:11px;top:5px}
+.bene li b{color:var(--gold);font-weight:700}
+.tag{display:inline-block;font-size:10.5px;border:1px solid var(--line);border-radius:5px;padding:1px 6px;color:var(--sand);margin-left:6px;vertical-align:1px}
+.section-title{font-family:'Noto Serif KR',serif;font-size:17px;font-weight:700;color:var(--gold);margin:26px 4px 12px}
+.summary{border:1px solid var(--line);border-radius:14px;background:var(--pine2);padding:16px;margin-bottom:10px}
+.summary h3{font-size:14px;display:flex;align-items:center;gap:7px;margin-bottom:8px}
+.summary ul{list-style:none}
+.summary li{padding:3px 0 3px 14px;position:relative;font-size:13px;color:var(--sand)}
+.summary li::before{content:"·";position:absolute;left:2px;color:var(--gold)}
+.summary li b{color:var(--ivory)}
+.empty{text-align:center;color:var(--sand);padding:40px 0;font-size:14px}
+footer{position:fixed;bottom:0;left:0;right:0;background:rgba(20,31,27,.96);border-top:1px solid var(--line);padding:9px 16px calc(9px + env(safe-area-inset-bottom));font-size:11px;color:var(--sand);text-align:center;backdrop-filter:blur(6px)}
+footer b{color:var(--gold)}
+</style>
+</head>
+<body>
+<header>
+  <h1>어디서 <em>긁지</em></h1>
+  <div class="sub">호텔 × 카드 혜택 컨시어지 · 2026.07 기준</div>
+  <div class="search"><input id="q" type="search" placeholder="호텔·브랜드 검색 (예: 콘래드, JW, 조식)"></div>
+  <div class="chips" id="chips">
+    <button class="chip on" data-f="all">전체</button>
+    <button class="chip" data-f="incheon">인천·송도</button>
+    <button class="chip" data-f="seoul">서울</button>
+    <button class="chip" data-f="korea">지방</button>
+    <button class="chip" data-f="global">해외</button>
+    <button class="chip" data-f="dining">다이닝</button>
+  </div>
+</header>
+<main>
+  <div class="legend">
+    <span><i class="dot d-h"></i>힐튼 아멕스 (롯데)</span>
+    <span><i class="dot d-a"></i>아멕스 플래티넘 (현대)</span>
+    <span><i class="dot d-b"></i>본보이 The BEST (신한)</span>
+  </div>
+  <div id="list"></div>
+  <div class="empty" id="empty" style="display:none">검색 결과 없음</div>
+
+  <div class="section-title">카드별 연간 체크리스트</div>
+  <div class="summary">
+    <h3><i class="dot d-h"></i>힐튼 아너스 아멕스 프리미엄 (롯데)</h3>
+    <ul>
+      <li><b>힐튼 골드 등급</b> 자동 — 조식·업글 우대</li>
+      <li><b>주말 무료숙박권 2매</b>/년 (환산가 50만/매) — 1차년도 1,200만 / 이후 연 2,400만 실적</li>
+      <li>연 2,400만 실적 시 <b>다이아몬드</b> 승급 (라운지·조식 상위 혜택)</li>
+      <li>국내 힐튼 호텔 <b>발렛파킹 연 12회</b> 무료 + <b>F&B 업장 할인 연 4회</b></li>
+      <li>1,500원당 최대 8 힐튼 포인트 (해외·힐튼 결제 시 최대)</li>
+      <li>공항 라운지 연 4회 (전월 50만)</li>
+    </ul>
+  </div>
+  <div class="summary">
+    <h3><i class="dot d-a"></i>현대 아멕스 The Platinum Edition2</h3>
+    <ul>
+      <li><b>연간 바우처 85만원</b> — 1년차 400만 / 2년차부터 3,600만 실적. 호텔·백화점·올리브영·무신사·네이버플러스·코스트코 전환</li>
+      <li>MR: 기본 1MR/1,000원 (전월 50만) · <b>5X</b> 특별적립 — 해외·호텔·항공·여행사·면세·골프 (영역별 한도 1.5만MR)</li>
+      <li><b>FHR</b> 전세계 특급호텔 — 업글·2인 조식·$100 크레딧·레이트 체크아웃. PLCC라 온라인 예약 불가, <b>컨시어지 전화 예약만</b></li>
+      <li><b>THC</b> 2박 이상 — $100 크레딧 + 업글</li>
+      <li>힐튼 골드 + <b>본보이 골드</b> + 래디슨 프리미엄 매칭 (MR사이트 신청)</li>
+      <li><b>센추리온 라운지</b> 본인 무제한 + 공항 리무진·호텔/공항 발레파킹</li>
+      <li>아멕스 다이닝: 국내 20여개 호텔 레스토랑 6만↑ <b>3만 할인</b> / 베이커리 4만↑ 2만 할인</li>
+    </ul>
+  </div>
+  <div class="summary">
+    <h3><i class="dot d-b"></i>메리어트 본보이 The BEST (신한 Visa)</h3>
+    <ul>
+      <li><b>골드 엘리트</b> 자동 — 업글 우대·14시 레이트 체크아웃·포인트 +25%</li>
+      <li><b>무료숙박권 35K</b> 연 1매 (연회비 주기 실적 100만) — 복합결제 불가(공홈 명시), 발행 후 12개월 유효</li>
+      <li><b>조식 5만원 할인</b> 연 2회 — 5만↑ 결제 시, 1일 1회, <b>플래티넘 무료조식과 중복 가능</b></li>
+      <li>적립: 메리어트 5P / 해외·항공(직판)·택시·카페(스벅·커피빈·폴바셋·투썸) 3P / 기본 1P — <b>특별적립은 전월 국내 30만 필수</b>, 해외 할부 제외</li>
+      <li>엘리트 나이트 크레딧 <b>10개</b>/년 (계정당 최대 15개)</li>
+      <li>라운지: <b>TLM 앱 연 4회</b>(동반 1인) + <b>비자 선택서비스 연 3회</b>(스카이허브·마티나) = 최대 7회</li>
+      <li><b>호텔 발렛파킹 월 5회</b> — 워커힐·콘래드·신라·JW·안다즈 등 30곳 (전월 30만)</li>
+      <li><b>공항 발렛파킹 월 3회</b> — 인천 T1/T2·김포 (전월 30만)</li>
+      <li>연 1,000만→5천P, 2,000만→1만P, 6,000만→<b>플래티넘</b> 승급</li>
+    </ul>
+  </div>
+  <div class="summary">
+    <h3><i class="dot d-b"></i>+ Visa Signature 공통 (본보이 카드 탑재)</h3>
+    <ul>
+      <li>국내 특급호텔 69곳 <b>F&B 5~20% 할인</b> · 74곳 객실/패키지 5~60% · 스파 22곳</li>
+      <li><b>Visa Luxury Hotel Collection</b> — 전세계 900개 호텔 특전</li>
+      <li>부킹닷컴 10% 캐시백 · 호텔스닷컴/익스피디아 8% · IHG 아태 20% · Trip.com 호텔 6%</li>
+      <li>Visa 컨시어지 24시간 (080-4840-880 / 카톡 채널)</li>
+    </ul>
+  </div>
+</main>
+<footer>혜택은 카드사·호텔 사정으로 변동 가능 · 고액 사용 전 <b>공홈 재확인</b></footer>
+<script>
+const H='hilton',A='amex',B='bonvoy';
+const CARD_LABEL={hilton:['힐튼 아멕스','c-h','d-h'],amex:['아멕스 플래티넘','c-a','d-a'],bonvoy:['본보이 The BEST','c-b','d-b']};
+const DATA=[{"n":"쉐라톤 그랜드 인천","s":"송도 · 도보권","f":["incheon"],"b":{"bonvoy":["골드 엘리트: 업글 우대·14시 체크아웃","조식 5만원 할인 (연 2회)","결제 1,000원당 5P","35K 무료숙박권 사용 가능"],"amex":["본보이 골드 매칭(중복 시 상위 적용)","호텔 결제 5X: 1,000원당 5MR","아멕스 다이닝: 레스토랑 6만↑ 3만 할인"]}},{"n":"오크우드 프리미어 인천","s":"송도 · 파노라믹 65","f":["incheon","dining"],"b":{"amex":["호텔 결제 5X: 1,000원당 5MR","아멕스 다이닝 대상 여부 매장 확인"],"bonvoy":["해당 없음 — THE HMC 무료멤버십 식음 15%(주중)가 정답"]}},{"n":"콘래드 서울","s":"여의도 · 힐튼 계열","f":["seoul"],"b":{"hilton":["골드/다이아 등급 혜택: 조식·라운지·업글","주말 무료숙박권 2매 사용 가능","발렛파킹 연 12회 무료 + F&B 할인 연 4회","결제 시 힐튼 포인트 최대 적립"],"amex":["힐튼 골드 매칭","호텔 결제 5X: 1,000원당 5MR","Be My Guest: 아트리오·숯 더붓처스엣지 3만 할인 / 플레임즈 베이커리 2만 (12/20~31 제외)"],"bonvoy":["호텔 발렛파킹 무료 (월 5회 통합) — 힐튼 호텔에서 신한 비자로 발렛"]}},{"n":"힐튼 경주 · 더블트리 판교 · 가든인 강남","s":"국내 힐튼 포트폴리오 (부산은 힐튼 탈퇴)","f":["korea","seoul"],"b":{"hilton":["골드/다이아 등급 혜택","주말 무료숙박권 2매 사용 가능","발렛파킹 연 12회 무료 + F&B 할인 연 4회","힐튼 포인트 최대 적립"],"amex":["힐튼 골드 매칭","호텔 결제 5X: 1,000원당 5MR"]}},{"n":"조선 팰리스 서울 강남","s":"럭셔리 컬렉션 · 메리어트","f":["seoul","dining"],"b":{"bonvoy":["골드 엘리트 혜택","조식 5만원 할인 대상 (연 2회)","결제 5P/1,000원"],"amex":["본보이 골드 매칭","호텔 결제 5X: 1,000원당 5MR","Be My Guest 대상 아님 (웨스틴조선은 대상)"]}},{"n":"JW 메리어트 서울 / 동대문","s":"메리어트 플래그십","f":["seoul","dining"],"b":{"bonvoy":["골드 엘리트 혜택","조식 5만원 할인 (연 2회, 5만↑ 결제 시)","호텔 발렛파킹 무료 (월 5회 통합)","결제 5P/1,000원"],"amex":["본보이 골드 매칭","호텔 5X 적립(5MR)","Be My Guest: JW동대문 타볼로24·BLT만 대상 (JW서울 반포 미포함)"]}},{"n":"웨스틴 조선 서울 / 부산","s":"메리어트 계열","f":["seoul","korea","dining"],"b":{"bonvoy":["골드 엘리트 혜택","조식 5만원 할인 대상","결제 5P/1,000원"],"amex":["본보이 골드 매칭","호텔 5X 적립(5MR)","Be My Guest: 서울 아리아·루브리카·나인스게이트 / 부산 까밀리아·오킴스 등"]}},{"n":"코트야드 / 포포인츠 / 알로프트 서울권","s":"남대문·타임스퀘어·판교·명동·강남 등","f":["seoul"],"b":{"bonvoy":["골드 엘리트: 업글·레이트 체크아웃","35K 숙박권 소진에 최적 (평시 요금 낮음)","결제 5P/1,000원"],"amex":["본보이 골드 매칭"]}},{"n":"워커힐 (그랜드/비스타)","s":"독립 체인 · WPC 별도","f":["seoul","dining"],"b":{"amex":["호텔 결제 5X: 1,000원당 5MR","Be My Guest: 온달 6만↑ 3만 할인 (12/24·31 제외)"],"bonvoy":["호텔 발렛파킹 무료 (월 5회 통합, 전월 30만)","Visa Signature: 특급호텔 F&B 5~20% 할인 대상 확인"],"hilton":["해당 없음"]}},{"n":"전세계 힐튼 계열","s":"콘래드·월도프·힐튼·더블트리·가든인 外","f":["global"],"b":{"hilton":["주말 무료숙박권 전세계 사용 (환산가 50만/매)","골드/다이아: 조식·라운지·업글","포인트 숙박 결합 전략 유효"],"amex":["힐튼 골드 매칭","MR→힐튼 포인트 전환으로 포인트 숙박 보충"]}},{"n":"전세계 메리어트 계열","s":"리츠칼튼·세인트레지스·W·쉐라톤 外 8,900개","f":["global"],"b":{"bonvoy":["35K 숙박권 해외 사용 가능 (동남아 리조트 가성비 갑)","골드 엘리트 전 호텔 적용","해외 결제 3P/1,000원"],"amex":["본보이 골드 매칭","MR→본보이 포인트 전환"]}},{"n":"FHR / THC 참여 호텔","s":"아만·포시즌스·페닌슐라 급 1,100개","f":["global"],"b":{"amex":["FHR: 업글+2인 조식+$100급 크레딧+레이트 체크아웃","THC: 2박↑ $100 크레딧+업글","반드시 플래티넘 컨시어지로 예약"]}},{"n":"세이부 프린스 (일본 8개)","s":"도쿄 파크타워·오사카 베이·오키나와 外","f":["global"],"b":{"amex":["클럽 라운지 입장 (조식·칵테일아워)","레이트 체크아웃 + 웰컴 스낵","포켓 컨시어지: 일본 파인다이닝 10% 할인"]}},{"n":"국내 특급호텔 다이닝 공통","s":"아멕스 다이닝 서비스","f":["dining","seoul"],"b":{"amex":["레스토랑 6만↑ 3만 할인: 신라(라연·팔선 포함)·웨스틴조선·워커힐 온달·콘래드·포시즌스·파크하얏트·안다즈·JW동대문 등 21곳","베이커리 4만↑ 2만 할인: 콘래드 플레임즈·포시즌스 등 10곳","룸차지 결제 시 불가·현장결제 필수·타 할인 중복 불가"]}}];
+const list=document.getElementById('list'),q=document.getElementById('q'),empty=document.getElementById('empty');
+let filter='all';
+function render(){
+  const kw=q.value.trim().toLowerCase();
+  let html='';let cnt=0;
+  DATA.forEach((d,i)=>{
+    if(filter!=='all'&&!d.f.includes(filter))return;
+    if(kw&&!(d.n+d.s+Object.values(d.b).flat().join('')).toLowerCase().includes(kw))return;
+    cnt++;
+    const dots=Object.keys(d.b).filter(k=>!d.b[k][0].startsWith('해당 없음')).map(k=>`<i class="dot ${CARD_LABEL[k][2]}"></i>`).join('');
+    const benes=Object.entries(d.b).map(([k,v])=>`
+      <div class="bene"><div class="bene-card ${CARD_LABEL[k][1]}"><i class="dot ${CARD_LABEL[k][2]}"></i>${CARD_LABEL[k][0]}</div>
+      <ul>${v.map(x=>`<li>${x.replace(/(무료숙박권|조식 5만원 할인|3만 할인|3MR|골드|다이아몬드|다이아|플래티넘|FHR|THC|클럽 라운지|5P|35K|50만)/g,'<b>$1</b>')}</li>`).join('')}</ul></div>`).join('');
+    html+=`<div class="hotel" id="h${i}">
+      <div class="hotel-head" onclick="document.getElementById('h${i}').classList.toggle('open')">
+        <div class="hotel-name">${d.n}<small>${d.s}</small></div>
+        <div class="dots">${dots}</div><span class="arrow">▶</span>
+      </div>
+      <div class="hotel-body">${benes}</div></div>`;
+  });
+  list.innerHTML=html;
+  empty.style.display=cnt?'none':'block';
+}
+q.addEventListener('input',render);
+document.getElementById('chips').addEventListener('click',e=>{
+  if(!e.target.dataset.f)return;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+  e.target.classList.add('on');filter=e.target.dataset.f;render();
+});
+render();
+</script>
+</body>
+</html>
