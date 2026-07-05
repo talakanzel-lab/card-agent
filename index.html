@@ -90,7 +90,7 @@ main{padding:6px 14px}
 <body>
 <header>
   <h1>어디서 <em>긁지</em></h1>
-  <div class="sub">호텔 × 카드 혜택 컨시어지 · 2026.07 기준 · b0705-0044</div>
+  <div class="sub">호텔 × 카드 혜택 컨시어지 · 2026.07 기준 · b0705-0914</div>
   <div class="search" id="searchWrap"><input id="q" type="search" placeholder="호텔·매장 검색 (예: 콘래드, 온달, 조식)"></div>
   <div class="chips" id="chips"></div>
 </header>
@@ -269,10 +269,13 @@ function renderDining(){
   $('dempty').style.display=cnt?'none':'block';
 }
 function renderValet(){
+  const kw=q.value.trim().toLowerCase();
   const regions=[...new Set(DATA.valet_hotels.map(v=>v.region))];
   let html='';
   regions.forEach(rg=>{
-    const rows=DATA.valet_hotels.filter(v=>v.region===rg&&(filter==='all'||v.cards.includes(filter)));
+    const rows=DATA.valet_hotels.filter(v=>v.region===rg
+      &&(filter==='all'||v.cards.includes(filter))
+      &&(!kw||(v.name+v.note).toLowerCase().includes(kw)));
     if(!rows.length)return;
     html+=`<div class="vregion">${rg} <small style="color:var(--sand);font-size:11px">(${rows.length})</small></div>`;
     rows.forEach(v=>{
@@ -280,11 +283,13 @@ function renderValet(){
         <div class="vdots">${v.cards.map(c=>`<i class="dot ${CARD_LABEL[c][2]}"></i>`).join('')}</div></div>`;
     });
   });
-  $('vlist').innerHTML=html;
+  $('vlist').innerHTML=html||'<div class="empty">검색 결과 없음</div>';
   $('valist').innerHTML=DATA.airport_valet
     .filter(a=>filter==='all'||a.cards.includes(filter))
+    .filter(a=>!kw||(a.name+a.note).toLowerCase().includes(kw))
     .map(a=>`<div class="vrow"><div class="vname">${a.name}<small>${a.note}</small></div>
-      <div class="vdots">${a.cards.map(c=>`<i class="dot ${CARD_LABEL[c][2]}"></i>`).join('')}</div></div>`).join('');
+      <div class="vdots">${a.cards.map(c=>`<i class="dot ${CARD_LABEL[c][2]}"></i>`).join('')}</div></div>`).join('')
+    ||'<div class="empty" style="padding:14px 0">해당 없음</div>';
 }
 function render(){
   if(view==='hotel')renderHotel();
@@ -302,7 +307,7 @@ function setView(v){
     $('view-'+x).style.display=x===v?'':'none';
   });
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.v===v));
-  $('searchWrap').style.display=v==='valet'?'none':'flex';
+  q.placeholder=v==='valet'?'발렛 호텔 검색 (예: 워커힐, 신라)':'호텔·매장 검색 (예: 콘래드, 온달, 조식)';
   setChips();render();
   window.scrollTo(0,0);
 }
